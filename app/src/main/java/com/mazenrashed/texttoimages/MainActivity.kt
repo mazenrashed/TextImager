@@ -83,7 +83,7 @@ class MainActivity : AppCompatActivity() {
             texts.add(
                 Line().apply {
                     this.centerText = TextInLine().apply {
-                        this.text = "--------------------------------------------------------------------------------"
+                        this.text = "-----------------------------------"
                         this.color = Color.BLACK
                         this.size = 13f
                     }
@@ -114,7 +114,7 @@ class MainActivity : AppCompatActivity() {
             texts.add(
                 Line().apply {
                     this.centerText = TextInLine().apply {
-                        this.text = "--------------------------------------------------------------------------------"
+                        this.text = "-----------------------------------"
                         this.color = Color.BLACK
                         this.size = 13f
                     }
@@ -190,7 +190,7 @@ class MainActivity : AppCompatActivity() {
             texts.add(
                 Line().apply {
                     this.centerText = TextInLine().apply {
-                        this.text = "--------------------------------------------------------------------------------"
+                        this.text = "-----------------------------------"
                         this.color = Color.BLACK
                         this.size = 13f
                     }

@@ -257,10 +257,12 @@ class ImageHelper(val resources: Resources, val context: Context) {
 
     fun textToBitmap(lines: ArrayList<Line>): Single<Bitmap> {
 
-        return Single.create{
+        return Single.create{emmiter ->
             val metrics = resources.displayMetrics
             val displayWidth = Math.min(metrics.widthPixels, metrics.heightPixels)
-            val bitmaps = lines.map { textToBitmap(it).blockingGet() }
+            val bitmaps = lines.map { textToBitmap(it).doOnError {
+                emmiter.onError(it)
+            }.blockingGet() }
             val bitmapHeight = bitmaps.map { it.height }.sum()
             var finalBitmap = Bitmap.createBitmap(displayWidth, bitmapHeight, Bitmap.Config.ARGB_8888)
 
@@ -272,7 +274,7 @@ class ImageHelper(val resources: Resources, val context: Context) {
                 lastY += it.height
             }
 
-            it.onSuccess(finalBitmap)
+            emmiter.onSuccess(finalBitmap)
         }
     }
 
@@ -372,7 +374,9 @@ class ImageHelper(val resources: Resources, val context: Context) {
 //            }
 //            if (processes == 0) done = true
 //        }
-        return getLinesBitmaps(mLines.toTypedArray(), font, color, size, aligment).blockingGet()
+        return getLinesBitmaps(mLines.toTypedArray(), font, color, size, aligment).doOnError {
+            it.printStackTrace()
+        }.blockingGet()
     }
 
     private fun getLinesBitmaps(
@@ -435,7 +439,9 @@ class ImageHelper(val resources: Resources, val context: Context) {
                 displayWidth,
                 textHeight,
                 Aligment.RIGHT
-            ).blockingGet()
+            ).doOnError {
+                it.printStackTrace()
+            }.blockingGet()
         }
         var leftTextBitmap = textFromLeft?.let {
             getTextBitmap(
@@ -444,7 +450,9 @@ class ImageHelper(val resources: Resources, val context: Context) {
                 displayWidth,
                 textHeight,
                 Aligment.LEFT
-            ).blockingGet()
+            ).doOnError {
+                it.printStackTrace()
+            }.blockingGet()
         }
         var centerTextBitmap = centerText?.let {
             getTextBitmap(
@@ -453,7 +461,9 @@ class ImageHelper(val resources: Resources, val context: Context) {
                 displayWidth,
                 textHeight,
                 Aligment.CENTER
-            ).blockingGet()
+            ).doOnError {
+                it.printStackTrace()
+            }.blockingGet()
         }
 
         return Single.just(arrayOf(rightTextBitmap, leftTextBitmap, centerTextBitmap))
